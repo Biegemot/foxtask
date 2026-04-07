@@ -31,11 +31,11 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v2
       
-     - name: Install Gradle
-       run: |
-         wget -q https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O /tmp/gradle.zip
-         unzip -q /tmp/gradle.zip -d /tmp
-         echo "/tmp/gradle-8.11.1/bin" >> $GITHUB_PATH
+    - name: Install Gradle
+      run: |
+        wget -q https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -O /tmp/gradle.zip
+        unzip -q /tmp/gradle.zip -d /tmp
+        echo "/tmp/gradle-8.11.1/bin" >> $GITHUB_PATH
         
     - name: Build Release APK
       run: gradle assembleRelease
