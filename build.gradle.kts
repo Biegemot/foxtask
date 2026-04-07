@@ -1,7 +1,8 @@
 // Top-level build file
 plugins {
     id("com.android.application") version "8.10.0" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+    id("org.jetbrains.kotlin.android") version "2.1.21" apply false
+    id("com.google.devtools.ksp") version "2.1.21-1.0.24" apply false
 }
 
 tasks.register("clean", Delete::class) {
