@@ -76,8 +76,7 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.4.0")
 
     // Vico (charts)
-    implementation("com.patrykandpatrick:vico-compose:1.13.0")
-    implementation("com.patrykandpatrick:vico-ktx:1.13.0")
+    implementation("com.patrykandpatrick:vico:1.13.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
