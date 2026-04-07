@@ -9,7 +9,3 @@ plugins {
 tasks.register("clean", Delete::class) {
     delete(rootProject.layout.buildDirectory)
 }
-
-tasks.register("clean", Delete::class) {
-    delete(rootProject.layout.buildDirectory)
-}
