@@ -21,6 +21,30 @@
 - **Kotlin** + **Jetpack Compose**
 - **Room** для локальной БД
 - **AlarmManager** для точных напоминаний
+- **Gradle 8.4** (для локальной сборки)
+
+---
+
+## 🛠️ Локальная сборка
+
+Проект использует Gradle wrapper (не включён в репозиторий). Для локальной сборки:
+
+```bash
+# Установите Gradle 8.4 (например, через SDKMAN)
+sdk install gradle 8.4
+# илиbrew install gradle
+
+# Сгенерируйте Gradle wrapper
+gradle wrapper --gradle-version 8.4
+
+# Соберите debug APK
+./gradlew assembleDebug
+
+# Или используйте system Gradle напрямую
+gradle assembleDebug
+```
+
+**Примечание:** GitHub Actions использует system Gradle (устанавливается в workflow), поэтому wrapper не требуется для CI.
 
 ---
 
