@@ -8,7 +8,8 @@ class CalculateLevelUseCase {
     // XP до следующего = 100 * (level+1)^2 - currentXp
 
     operator fun invoke(currentXp: Int): Pair<Int, Int> {
-        val level = sqrt((currentXp / 100.0)).toInt()
+        // Use double division to avoid integer division issues
+        val level = sqrt((currentXp.toDouble() / 100.0)).toInt()
         val xpToNextLevel = 100 * (level + 1) * (level + 1) - currentXp
         return Pair(level, xpToNextLevel)
     }

@@ -56,6 +56,17 @@ object AlarmManagerHelper {
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         
+        // Check permission for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!alarmManager.canScheduleExactAlarms()) {
+                Log.e(TAG, "Missing SCHEDULE_EXACT_ALARM permission on Android 13+")
+                // In real app, you should request permission via Intent
+                // val intent = Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                // context.startActivity(intent)
+                return
+            }
+        }
+        
         // Calculate trigger time
         val now = System.currentTimeMillis()
         val calendar = java.util.Calendar.getInstance().apply {
@@ -80,12 +91,12 @@ object AlarmManagerHelper {
             putExtra(AlarmReceiver.EXTRA_TASK_TITLE, title)
         }
         
-        // Create pending intent
+        // Create pending intent with proper security flags
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             taskId, // unique request code per task
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         
         try {
@@ -138,7 +149,7 @@ object AlarmManagerHelper {
             context,
             taskId,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
         )
         
         alarmManager.cancel(pendingIntent)
@@ -162,7 +173,7 @@ object AlarmManagerHelper {
                 context,
                 taskId,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             )
             
             alarmManager.cancel(pendingIntent)

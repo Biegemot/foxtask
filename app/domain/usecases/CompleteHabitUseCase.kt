@@ -14,8 +14,9 @@ class CompleteHabitUseCase(
     suspend operator fun invoke(habitId: Int, completedDate: Long? = null): Reward =
         withContext(Dispatchers.IO) {
             val habit = repository.getTaskById(habitId) ?: return@withContext Reward(0, 0)
-            val today = completedDate ?: LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            val epochDay = today / (1000 * 60 * 60 * 24)
+            val today = completedDate ?: System.currentTimeMillis()
+            // Use consistent epoch day calculation (milliseconds per day = 86400000)
+            val epochDay = today / 86400000
 
             // Проверяем прогресс на сегодня
             val existing = repository.getProgressForDate(habitId, epochDay)

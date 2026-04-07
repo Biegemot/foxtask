@@ -29,13 +29,14 @@ object ServiceLocator {
         }
 
         database = FoxTaskDatabase.getInstance(context)
+        val db = database ?: throw IllegalStateException("Database initialization failed")
         repository = FoxTaskRepositoryImpl(
-            database!!.userDao(),
-            database!!.taskDao(),
-            database!!.habitProgressDao(),
-            database!!.itemDao(),
-            database!!.inventoryDao(),
-            database!!.outfitDao()
+            db.userDao(),
+            db.taskDao(),
+            db.habitProgressDao(),
+            db.itemDao(),
+            db.inventoryDao(),
+            db.outfitDao()
         )
         // Prepopulate data in background with exception handling
         CoroutineScope(Dispatchers.IO + globalExceptionHandler).launch {
@@ -44,9 +45,10 @@ object ServiceLocator {
     }
 
     private suspend fun prepopulateDatabase() {
-        val itemDao = database!!.itemDao()
-        val userDao = database!!.userDao()
-        val outfitDao = database!!.outfitDao()
+        val db = database ?: return
+        val itemDao = db.itemDao()
+        val userDao = db.userDao()
+        val outfitDao = db.outfitDao()
 
         // Items (if empty)
         if (itemDao.getAllActiveItems().isEmpty()) {
@@ -126,7 +128,7 @@ object ServiceLocator {
     }
 
     fun getCompleteTaskUseCase(): CompleteTaskUseCase {
-        return CompleteTaskUseCase(getRepository(), getCalculateLevelUseCase())
+        return CompleteTaskUseCase(getRepository(), getCalculateLevelUseCase(), getCalculateXpRewardUseCase())
     }
 
     fun getCompleteHabitUseCase(): CompleteHabitUseCase {
@@ -143,6 +145,10 @@ object ServiceLocator {
 
     fun getCalculateLevelUseCase(): CalculateLevelUseCase {
         return CalculateLevelUseCase()
+    }
+
+    fun getCalculateXpRewardUseCase(): CalculateXpRewardUseCase {
+        return CalculateXpRewardUseCase()
     }
 
     fun getGetStatisticsUseCase(): GetStatisticsUseCase {
