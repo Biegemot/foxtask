@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.android") version "2.3.0" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "2.3.0" apply false
     id("com.google.devtools.ksp")
 }
 
@@ -37,6 +37,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += ["-Xskip-metadata-version-check"]
     }
     buildFeatures {
         compose = true
