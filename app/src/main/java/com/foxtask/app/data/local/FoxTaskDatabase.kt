@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.foxtask.app.data.local.Converters
+import kotlin.jvm.Volatile
 import com.foxtask.app.data.local.entities.HabitProgress
 import com.foxtask.app.data.local.entities.Inventory
 import com.foxtask.app.data.local.entities.Item
@@ -58,8 +61,8 @@ abstract class FoxTaskDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_1_2 = object : androidx.room.migration.Migration(1, 2) {
-            override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
                 // Индексы для tasks
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_tasks_isHabit ON tasks(isHabit)")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_tasks_isCompleted ON tasks(isCompleted)")
