@@ -5,6 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.foxtask.app.data.local.Converters
+import com.foxtask.app.data.local.dao.HabitProgressDao
+import com.foxtask.app.data.local.dao.InventoryDao
+import com.foxtask.app.data.local.dao.ItemDao
+import com.foxtask.app.data.local.dao.OutfitDao
+import com.foxtask.app.data.local.dao.TaskDao
+import com.foxtask.app.data.local.dao.UserDao
 import com.foxtask.app.data.local.entities.HabitProgress
 import com.foxtask.app.data.local.entities.Inventory
 import com.foxtask.app.data.local.entities.Item
