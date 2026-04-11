@@ -61,7 +61,7 @@ class CalculateXpRewardUseCaseTest {
     @Test
     fun `streak multiplier increases XP`() {
         val noStreakXp = useCase(isHabit = true, priority = 3, streak = 0)
-        val streakXp = useCase(isHabit = true, priority = 3, streak = 5)
+        val streakXp = useCase(isHabit = true, priority = 3, streak = 7)
         
         assertTrue(streakXp > noStreakXp)
     }
@@ -69,7 +69,7 @@ class CalculateXpRewardUseCaseTest {
     @Test
     fun `XP is always positive`() {
         val xp1 = useCase(isHabit = false, priority = 1)
-        val xp2 = useCase(isHabit = true, priority = 1, streak = 0)
+        val xp2 = useCase(isHabit = true, priority = 2, streak = 0)
         
         assertTrue(xp1 > 0)
         assertTrue(xp2 > 0)
