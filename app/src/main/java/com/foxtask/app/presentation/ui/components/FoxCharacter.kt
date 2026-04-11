@@ -51,8 +51,8 @@ fun FoxCharacter(
         // Базовый лис
         Canvas(modifier = Modifier.matchParentSize()) {
             val scale = baseScale * animationProgress
-            val centerX = size.width / 2
-            val centerY = size.height / 2 + 20.dp.toPx()
+            val centerX = this.size.width / 2
+            val centerY = this.size.height / 2 + 20.dp.toPx()
 
             withTransform({
                 translate(centerX, centerY)
