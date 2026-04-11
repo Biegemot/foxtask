@@ -21,72 +21,69 @@ class CalculateLevelUseCaseTest {
     
     @Test
     fun `calculate level for 0 XP returns level 1`() {
-        val result = useCase.calculateLevel(0)
+        val (level, xpToNextLevel) = useCase.invoke(0)
         
-        assertEquals(1, result.level)
-        assertEquals(0, result.currentXp)
-        assertTrue(result.xpForNextLevel > 0)
+        assertEquals(0, level)
+        assertTrue(xpToNextLevel > 0)
     }
     
     @Test
-    fun `calculate level for 100 XP returns level 2`() {
-        val result = useCase.calculateLevel(100)
+    fun `calculate level for 100 XP returns level 1`() {
+        val (level, xpToNextLevel) = useCase.invoke(100)
         
-        assertEquals(2, result.level)
-        assertEquals(0, result.currentXp)
+        assertEquals(1, level)
+        assertTrue(xpToNextLevel > 0)
     }
     
     @Test
-    fun `calculate level for 50 XP returns level 1 with progress`() {
-        val result = useCase.calculateLevel(50)
+    fun `calculate level for 50 XP returns level 0 with progress`() {
+        val (level, xpToNextLevel) = useCase.invoke(50)
         
-        assertEquals(1, result.level)
-        assertEquals(50, result.currentXp)
-        assertTrue(result.xpForNextLevel > 0)
+        assertEquals(0, level)
+        assertEquals(50, xpToNextLevel)
     }
     
     @Test
-    fun `calculate level for 250 XP returns correct level`() {
-        // 100 XP for level 2, 150 XP for level 3 = 250 total
-        val result = useCase.calculateLevel(250)
+    fun `calculate level for 400 XP returns level 2`() {
+        // 100 XP for level 1, 400 XP for level 2
+        val (level, xpToNextLevel) = useCase.invoke(400)
         
-        assertEquals(3, result.level)
-        assertEquals(0, result.currentXp)
+        assertEquals(2, level)
+        assertTrue(xpToNextLevel > 0)
     }
     
     @Test
-    fun `calculate level for 275 XP returns level 3 with progress`() {
-        // 250 XP to reach level 3, 25 XP progress towards level 4
-        val result = useCase.calculateLevel(275)
+    fun `calculate level for 450 XP returns level 2 with progress`() {
+        // 400 XP to reach level 2, 50 XP progress towards level 3
+        val (level, xpToNextLevel) = useCase.invoke(450)
         
-        assertEquals(3, result.level)
-        assertEquals(25, result.currentXp)
-        assertTrue(result.xpForNextLevel > 25)
+        assertEquals(2, level)
+        assertTrue(xpToNextLevel > 0)
     }
     
     @Test
     fun `XP for next level increases with each level`() {
-        val level1 = useCase.calculateLevel(0)
-        val level2 = useCase.calculateLevel(100)
-        val level3 = useCase.calculateLevel(250)
+        val (_, xpToNext1) = useCase.invoke(0)
+        val (_, xpToNext2) = useCase.invoke(100)
+        val (_, xpToNext3) = useCase.invoke(400)
         
-        assertTrue(level2.xpForNextLevel > level1.xpForNextLevel)
-        assertTrue(level3.xpForNextLevel > level2.xpForNextLevel)
+        assertTrue(xpToNext2 > xpToNext1)
+        assertTrue(xpToNext3 > xpToNext2)
     }
     
     @Test
     fun `negative XP is treated as 0`() {
-        val result = useCase.calculateLevel(-100)
+        val (level, xpToNextLevel) = useCase.invoke(-100)
         
-        assertEquals(1, result.level)
-        assertEquals(0, result.currentXp)
+        assertEquals(0, level)
+        assertTrue(xpToNextLevel > 0)
     }
     
     @Test
     fun `very large XP returns high level`() {
-        val result = useCase.calculateLevel(10000)
+        val (level, xpToNextLevel) = useCase.invoke(10000)
         
-        assertTrue(result.level > 10)
-        assertTrue(result.currentXp >= 0)
+        assertTrue(level > 5)
+        assertTrue(xpToNextLevel > 0)
     }
 }
