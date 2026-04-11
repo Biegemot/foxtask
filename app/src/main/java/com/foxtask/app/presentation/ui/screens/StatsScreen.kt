@@ -20,15 +20,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.foxtask.app.domain.models.Statistics
 import com.foxtask.app.presentation.viewmodel.StatsViewModel
-import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
-import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
-import com.patrykandpatrick.vico.compose.common.ProvideVicoTheme
-import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
-import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
-import com.patrykandpatrick.vico.compose.m3.common.rememberM3VicoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -172,32 +163,37 @@ fun CompletionRateCard(stats: Statistics) {
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Bar chart using Vico 3.x
-            val modelProducer = remember { CartesianChartModelProducer.build() }
-            
-            LaunchedEffect(stats) {
-                modelProducer.tryRunTransaction {
-                    columnSeries {
-                        series(
-                            (stats.weeklyCompletionRate * 100).toFloat(),
-                            (stats.monthlyCompletionRate * 100).toFloat()
-                        )
-                    }
+            // Completion rates display
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Неделя",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${(stats.weeklyCompletionRate * 100).toInt()}%",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
-            }
-
-            ProvideVicoTheme(rememberM3VicoTheme()) {
-                CartesianChartHost(
-                    chart = rememberCartesianChart(
-                        rememberColumnCartesianLayer()
-                    ),
-                    modelProducer = modelProducer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    startAxis = rememberStartAxis(),
-                    bottomAxis = rememberBottomAxis()
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Месяц",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${(stats.monthlyCompletionRate * 100).toInt()}%",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }
