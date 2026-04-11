@@ -24,6 +24,7 @@ class PurchaseItemUseCase(
 
         // Добавляем в инвентарь
         val inventory = Inventory(
+            id = 0, // autoGenerate
             userId = userId,
             itemId = itemId,
             purchaseDate = System.currentTimeMillis(),

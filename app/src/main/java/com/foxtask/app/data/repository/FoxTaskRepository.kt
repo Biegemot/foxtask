@@ -2,6 +2,7 @@ package com.foxtask.app.data.repository
 
 import com.foxtask.app.data.local.dao.HabitProgressDao
 import com.foxtask.app.data.local.dao.InventoryDao
+import com.foxtask.app.data.local.dao.InventoryWithItem
 import com.foxtask.app.data.local.entities.*
 import com.foxtask.app.data.models.ItemCategory
 import com.foxtask.app.data.models.ItemTier
@@ -43,7 +44,7 @@ interface FoxTaskRepository {
     suspend fun getInventoryForUser(userId: Int): List<Inventory>
     suspend fun getEquippedItems(userId: Int): List<Inventory>
     suspend fun getInventoryItem(userId: Int, itemId: Int): Inventory?
-    suspend fun getInventoryWithItems(userId: Int): List<InventoryDao.InventoryWithItem>
+    suspend fun getInventoryWithItems(userId: Int): List<InventoryWithItem>
     suspend fun insertInventoryItem(inventory: Inventory)
     suspend fun updateInventoryItem(inventory: Inventory)
     suspend fun setEquipped(inventoryId: Int, equipped: Boolean)
@@ -53,7 +54,7 @@ interface FoxTaskRepository {
 
     // Outfit
     suspend fun getOutfit(userId: Int): Outfit?
-    fun getOutfitStream(userId: Int): Flow<Outfit>
+    fun getOutfitStream(userId: Int): Flow<Outfit?>
     suspend fun insertOutfit(outfit: Outfit)
     suspend fun updateOutfit(outfit: Outfit)
 

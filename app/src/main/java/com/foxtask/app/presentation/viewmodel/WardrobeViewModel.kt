@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.foxtask.app.data.local.dao.InventoryDao
+import com.foxtask.app.data.local.dao.InventoryWithItem
 import com.foxtask.app.data.local.entities.Inventory
 import com.foxtask.app.data.local.entities.Item
 import com.foxtask.app.data.local.entities.Outfit
@@ -86,7 +87,7 @@ class WardrobeViewModel(
 
     data class WardrobeUiState(
         val inventory: List<com.foxtask.app.data.local.entities.Inventory> = emptyList(),
-        val inventoryWithItems: List<com.foxtask.app.data.local.dao.InventoryDao.InventoryWithItem> = emptyList(),
+        val inventoryWithItems: List<InventoryWithItem> = emptyList(),
         val outfit: Outfit? = null,
         val selectedCategory: ItemCategory = ItemCategory.HAT
     ) {
@@ -103,10 +104,9 @@ class WardrobeViewModel(
                 ItemCategory.MAORI_PATTERN -> outfit?.maoriPatternItemId
             }
 
-        val categoryItems: List<com.foxtask.app.data.local.dao.InventoryDao.InventoryWithItem>
+        val categoryItems: List<InventoryWithItem>
             get() = inventoryWithItems.filter { (_, item) ->
                 item.category == selectedCategory
             }
     }
-}
 }

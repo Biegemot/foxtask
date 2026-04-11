@@ -40,18 +40,20 @@ class MainViewModel(
         }
         viewModelScope.launch {
             repository.getOutfitStream(1).collect { outfitEntity ->
-                val outfit = FoxOutfit(
-                    hatItemId = outfitEntity.hatItemId,
-                    glassesItemId = outfitEntity.glassesItemId,
-                    maskItemId = outfitEntity.maskItemId,
-                    scarfItemId = outfitEntity.scarfItemId,
-                    bandanaItemId = outfitEntity.bandanaItemId,
-                    cloakItemId = outfitEntity.cloakItemId,
-                    furColorItemId = outfitEntity.furColorItemId,
-                    backgroundThemeId = outfitEntity.backgroundThemeId,
-                    maoriPatternItemId = outfitEntity.maoriPatternItemId
-                )
-                _uiState.value = _uiState.value.copy(outfit = outfit)
+                if (outfitEntity != null) {
+                    val outfit = FoxOutfit(
+                        hatItemId = outfitEntity.hatItemId,
+                        glassesItemId = outfitEntity.glassesItemId,
+                        maskItemId = outfitEntity.maskItemId,
+                        scarfItemId = outfitEntity.scarfItemId,
+                        bandanaItemId = outfitEntity.bandanaItemId,
+                        cloakItemId = outfitEntity.cloakItemId,
+                        furColorItemId = outfitEntity.furColorItemId,
+                        backgroundThemeId = outfitEntity.backgroundThemeId,
+                        maoriPatternItemId = outfitEntity.maoriPatternItemId
+                    )
+                    _uiState.value = _uiState.value.copy(outfit = outfit)
+                }
             }
         }
         loadItems()

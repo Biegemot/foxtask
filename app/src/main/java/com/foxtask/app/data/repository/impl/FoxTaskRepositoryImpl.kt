@@ -1,8 +1,9 @@
-package com.foxtask.app.data.repository
+package com.foxtask.app.data.repository.impl
 
 import com.foxtask.app.data.local.dao.*
 import com.foxtask.app.data.local.entities.*
 import com.foxtask.app.data.models.*
+import com.foxtask.app.data.repository.FoxTaskRepository
 import com.foxtask.app.domain.models.Statistics
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -67,7 +68,7 @@ class FoxTaskRepositoryImpl(
         inventoryDao.getEquippedItems(userId)
     override suspend fun getInventoryItem(userId: Int, itemId: Int): Inventory? =
         inventoryDao.getInventoryItem(userId, itemId)
-    override suspend fun getInventoryWithItems(userId: Int): List<InventoryDao.InventoryWithItem> =
+    override suspend fun getInventoryWithItems(userId: Int): List<InventoryWithItem> =
         inventoryDao.getInventoryWithItems(userId)
     override suspend fun insertInventoryItem(inventory: Inventory) =
         inventoryDao.insertInventoryItem(inventory)
@@ -81,7 +82,7 @@ class FoxTaskRepositoryImpl(
 
     // Outfit
     override suspend fun getOutfit(userId: Int): Outfit? = outfitDao.getOutfit(userId)
-    override fun getOutfitStream(userId: Int): Flow<Outfit> = outfitDao.getOutfitStream(userId)
+    override fun getOutfitStream(userId: Int): Flow<Outfit?> = outfitDao.getOutfitStream(userId)
     override suspend fun insertOutfit(outfit: Outfit) = outfitDao.insertOutfit(outfit)
     override suspend fun updateOutfit(outfit: Outfit) = outfitDao.updateOutfit(outfit)
 

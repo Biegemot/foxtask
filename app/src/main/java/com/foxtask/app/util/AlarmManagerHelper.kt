@@ -6,7 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import com.foxtask.app.di.ServiceLocator
 import com.foxtask.app.receiver.AlarmReceiver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * AlarmManagerHelper для точных напоминаний.
@@ -19,7 +23,6 @@ import com.foxtask.app.receiver.AlarmReceiver
 object AlarmManagerHelper {
     private const val TAG = "AlarmManagerHelper"
     private const val REQUEST_CODE_BASE = 1000
-    private const val MAX_TASK_ID = 1000
     private const val MILLIS_PER_DAY = 86_400_000L
     private const val DEFAULT_REMINDER_HOUR = 9
     private const val DEFAULT_REMINDER_MINUTE = 0
@@ -56,13 +59,14 @@ object AlarmManagerHelper {
     ) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         
-        // Check permission for Android 13+
+        // Check permission for Android 12+ (API 31+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (!alarmManager.canScheduleExactAlarms()) {
-                Log.e(TAG, "Missing SCHEDULE_EXACT_ALARM permission on Android 13+")
-                // In real app, you should request permission via Intent
-                // val intent = Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                // context.startActivity(intent)
+            if (!PermissionHelper.canScheduleExactAlarms(context)) {
+                Log.e(TAG, "Missing SCHEDULE_EXACT_ALARM permission on Android 12+")
+                // Notify user through ErrorHandler
+                CoroutineScope(Dispatchers.Main).launch {
+                    ErrorHandler.showError(context.getString(com.foxtask.app.R.string.permission_exact_alarm_required))
+                }
                 return
             }
         }
@@ -159,12 +163,18 @@ object AlarmManagerHelper {
      /**
       * Cancel all reminders (e.g., on logout)
       */
-     fun cancelAllReminders(context: Context) {
+     suspend fun cancelAllReminders(context: Context) {
          val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
          
-         // We need to cancel all pending intents - we'll cancel by iterating possible task IDs
-         // In production, maintain a list of scheduled alarm IDs
-         for (taskId in 1..MAX_TASK_ID) {
+         // Get actual task IDs with reminders from database
+         val taskIds = try {
+             ServiceLocator.getDatabase().taskDao().getTaskIdsWithReminders()
+         } catch (e: Exception) {
+             Log.e(TAG, "Failed to get task IDs from database", e)
+             emptyList()
+         }
+         
+         taskIds.forEach { taskId ->
             val intent = Intent(context, AlarmReceiver::class.java).apply {
                 action = AlarmReceiver.ACTION_REMINDER
             }
@@ -179,6 +189,6 @@ object AlarmManagerHelper {
             alarmManager.cancel(pendingIntent)
         }
         
-        Log.i(TAG, "All reminders cancelled")
+        Log.i(TAG, "Cancelled ${taskIds.size} reminders")
     }
 }

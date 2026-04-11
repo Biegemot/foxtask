@@ -2,6 +2,8 @@ package com.foxtask.app.presentation.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,14 +20,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.foxtask.app.domain.models.Statistics
 import com.foxtask.app.presentation.viewmodel.StatsViewModel
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.bar.barChart
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.core.entry.entryOf
-import com.patrykandpatrick.vico.core.entry.entriesOf
-import com.patrykandpatrick.vico.compose.theme.VicoComposeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,34 +163,37 @@ fun CompletionRateCard(stats: Statistics) {
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Bar chart using Vico
-            val chartData = entriesOf(
-                entryOf(0, (stats.weeklyCompletionRate * 100).toFloat()),
-                entryOf(1, (stats.monthlyCompletionRate * 100).toFloat())
-            )
-
-            ProvideChartStyle(VicoComposeTheme) {
-                Chart(
-                    chart = barChart(),
-                    model = chartData,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    startAxis = rememberStartAxis(
-                        label = { value, _ -> "${value.toInt()}%" }
-                    ),
-                    bottomAxis = rememberBottomAxis(
-                        guideline = null,
-                        tick = null,
-                        label = { value, _ ->
-                            when (value.toInt()) {
-                                0 -> "Неделя"
-                                1 -> "Месяц"
-                                else -> ""
-                            }
-                        }
+            // Completion rates display
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Неделя",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${(stats.weeklyCompletionRate * 100).toInt()}%",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = "Месяц",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${(stats.monthlyCompletionRate * 100).toInt()}%",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }

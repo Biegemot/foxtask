@@ -60,4 +60,24 @@
     <string name="priority_medium">Средний</string>
     <string name="priority_high">Высокий</string>
     <string name="priority_critical">Критический</string>
+    
+    <!-- Error messages -->
+    <string name="error_network">Ошибка сети. Проверьте подключение</string>
+    <string name="error_database">Ошибка базы данных</string>
+    <string name="error_generic">Произошла ошибка. Попробуйте снова</string>
+    <string name="error_invalid_state">Некорректное состояние приложения</string>
+    <string name="error_invalid_data">Некорректные данные</string>
+    
+    <!-- Permission messages -->
+    <string name="permission_exact_alarm_required">Требуется разрешение для точных напоминаний. Откройте настройки приложения.</string>
+    <string name="permission_exact_alarm_title">Требуется разрешение</string>
+    <string name="permission_exact_alarm_message">Для точных напоминаний необходимо разрешение. Разрешить в настройках?</string>
+    <string name="permission_settings">Настройки</string>
+    
+    <!-- Navigation -->
+    <string name="nav_main">Главная</string>
+    <string name="nav_tasks">Задачи</string>
+    <string name="nav_shop">Магазин</string>
+    <string name="nav_wardrobe">Гардероб</string>
+    <string name="nav_stats">Статистика</string>
 </resources>

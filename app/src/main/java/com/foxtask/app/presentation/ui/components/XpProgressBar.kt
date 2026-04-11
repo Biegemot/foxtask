@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.foxtask.app.presentation.ui.theme.*
@@ -52,7 +53,7 @@ fun XpProgressBar(
                 .height(8.dp),
             color = XpProgress,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
-            strokeCap = androidx.compose.foundation.shape.StadiumShape
+            strokeCap = StrokeCap.Round
         )
     }
 }

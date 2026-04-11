@@ -1,6 +1,5 @@
 package com.foxtask.app.presentation.ui.theme
 
-import android.util.Configuration
 import androidx.compose.ui.graphics.Color
 
 // Primary

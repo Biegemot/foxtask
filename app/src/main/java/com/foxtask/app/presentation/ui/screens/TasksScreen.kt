@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.foxtask.app.presentation.components.TaskCard
+import com.foxtask.app.presentation.ui.components.TaskCard
 import com.foxtask.app.presentation.viewmodel.TasksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

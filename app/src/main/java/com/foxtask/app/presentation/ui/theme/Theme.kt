@@ -59,7 +59,7 @@ fun FoxTaskTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        shapes = Shapes,
+        shapes = AppShapes,
         content = content
     )
 }
