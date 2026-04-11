@@ -46,15 +46,15 @@ fun FoxCharacter(
         // Базовый лис
         Canvas(modifier = Modifier.matchParentSize()) {
             val scale = baseScale * animationProgress
-            val centerX = size.toPx() / 2
-            val centerY = size.toPx() / 2 + 20.dp.toPx()
+            val centerX = size.width / 2
+            val centerY = size.height / 2 + 20.dp.toPx()
 
             withTransform({
                 translate(centerX, centerY)
-                scale(scale, scale, pivot = Offset.Zero)
+                scale(scale, scale)
                 translate(-centerX, -centerY)
             }) {
-                drawFoxBase(this)
+                drawFoxBase()
             }
         }
 
@@ -169,71 +169,70 @@ fun FoxCharacter(
     }
 }
 
-fun drawFoxBase(drawScope: DrawScope) {
-    val cx = drawScope.size.width / 2
-    val cy = drawScope.size.height / 2
-
-    val paint = Paint().apply {
-        color = FoxBaseOrange
-        style = PaintingStyle.Fill
-        isAntiAlias = true
-    }
+fun DrawScope.drawFoxBase() {
+    val cx = size.width / 2
+    val cy = size.height / 2
 
     // Body (ellipse)
-    drawContext.canvas.drawOval(
-        left = cx - 60f,
-        top = cy + 20f,
-        right = cx + 60f,
-        bottom = cy + 80f,
-        paint = paint
+    drawOval(
+        color = FoxBaseOrange,
+        topLeft = Offset(cx - 60f, cy + 20f),
+        size = Size(120f, 60f)
     )
 
     // Head (circle)
-    drawContext.canvas.drawCircle(
-        x = cx,
-        y = cy - 20f,
+    drawCircle(
+        color = FoxBaseOrange,
         radius = 45f,
-        paint = paint
+        center = Offset(cx, cy - 20f)
     )
 
     // Ears (triangles)
-    val earPaint = Paint().apply {
-        color = FoxBaseOrange
-        style = PaintingStyle.Fill
-        isAntiAlias = true
-    }
-    val path = Path().apply {
+    val earPath = androidx.compose.ui.graphics.Path().apply {
         moveTo(cx - 35f, cy - 50f)
         lineTo(cx - 55f, cy - 90f)
         lineTo(cx - 15f, cy - 65f)
         close()
     }
-    drawContext.canvas.drawPath(path, earPaint)
+    drawPath(
+        path = earPath,
+        color = FoxBaseOrange
+    )
 
-    val path2 = Path().apply {
+    val earPath2 = androidx.compose.ui.graphics.Path().apply {
         moveTo(cx + 35f, cy - 50f)
         lineTo(cx + 55f, cy - 90f)
         lineTo(cx + 15f, cy - 65f)
         close()
     }
-    drawContext.canvas.drawPath(path2, earPaint)
+    drawPath(
+        path = earPath2,
+        color = FoxBaseOrange
+    )
 
     // Eyes
-    val eyePaint = Paint().apply {
-        color = Color.Black
-        style = PaintingStyle.Fill
-    }
-    drawContext.canvas.drawCircle(cx - 15f, cy - 25f, 6f, eyePaint)
-    drawContext.canvas.drawCircle(cx + 15f, cy - 25f, 6f, eyePaint)
+    drawCircle(
+        color = Color.Black,
+        radius = 6f,
+        center = Offset(cx - 15f, cy - 25f)
+    )
+    drawCircle(
+        color = Color.Black,
+        radius = 6f,
+        center = Offset(cx + 15f, cy - 25f)
+    )
 
     // Nose
-    drawContext.canvas.drawCircle(cx, cy - 5f, 6f, eyePaint)
+    drawCircle(
+        color = Color.Black,
+        radius = 6f,
+        center = Offset(cx, cy - 5f)
+    )
 
     // Nose highlight (white)
-    val highlightPaint = Paint().apply {
-        color = Color.White
-        style = PaintingStyle.Fill
-        alpha = 0.5f
-    }
-    drawContext.canvas.drawCircle(cx - 2f, cy - 7f, 2f, highlightPaint)
+    drawCircle(
+        color = Color.White,
+        radius = 2f,
+        center = Offset(cx - 2f, cy - 7f)
+    )
 }
