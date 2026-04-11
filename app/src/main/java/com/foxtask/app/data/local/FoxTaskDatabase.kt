@@ -27,7 +27,7 @@ import com.foxtask.app.data.local.entities.User
         Task::class,
         HabitProgress::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false,
     typeConverters = [Converters::class]
 )
@@ -50,7 +50,7 @@ abstract class FoxTaskDatabase : RoomDatabase() {
                     FoxTaskDatabase::class.java,
                     "foxtask_database"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .fallbackToDestructiveMigration() // dev convenience
                     .build()
                 INSTANCE = instance
@@ -73,6 +73,13 @@ abstract class FoxTaskDatabase : RoomDatabase() {
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_inventory_userId ON inventory(userId)")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_inventory_userId_itemId ON inventory(userId, itemId)")
                 database.execSQL("CREATE INDEX IF NOT EXISTS index_inventory_isEquipped ON inventory(isEquipped)")
+            }
+        }
+        
+        val MIGRATION_2_3 = object : androidx.room.migration.Migration(2, 3) {
+            override fun migrate(database: androidx.sqlite.db.SupportSQLiteDatabase) {
+                // Добавить индекс для reminderEnabled для оптимизации запросов напоминаний
+                database.execSQL("CREATE INDEX IF NOT EXISTS index_tasks_reminderEnabled ON tasks(reminderEnabled)")
             }
         }
     }

@@ -33,4 +33,7 @@ interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE isCompleted = 0 AND (dueDate <= :beforeDate OR dueDate IS NULL)")
     suspend fun getPendingTasks(beforeDate: Long): List<Task>
+    
+    @Query("SELECT id FROM tasks WHERE reminderEnabled = 1")
+    suspend fun getTaskIdsWithReminders(): List<Int>
 }

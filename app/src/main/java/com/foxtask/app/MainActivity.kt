@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -24,25 +26,12 @@ import com.foxtask.app.presentation.ui.navigation.NavGraph
 import com.foxtask.app.presentation.ui.navigation.Screen
 import com.foxtask.app.presentation.ui.theme.FoxTaskTheme
 import com.foxtask.app.presentation.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import com.foxtask.app.util.ErrorHandler
+import kotlinx.coroutines.flow.collect
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Set up global exception handler for coroutines
-        val globalExceptionHandler = CoroutineExceptionHandler { _, exception ->
-            Log.e("GlobalExceptionHandler", "Unhandled coroutine exception", exception)
-            // TODO: Show user-friendly UI notification
-        }
-        
-        // Install as default for the whole app
-        CoroutineScope(SupervisorJob() + Dispatchers.Main + globalExceptionHandler).launch {
-            // This scope will handle uncaught exceptions
-        }
 
         setContent {
             FoxTaskTheme {
@@ -61,6 +50,19 @@ fun MainScreenContent() {
 
     val mainViewModel: MainViewModel = viewModel()
     val mainUiState by mainViewModel.uiState.collectAsState()
+    
+    // Snackbar для отображения ошибок
+    val snackbarHostState = remember { SnackbarHostState() }
+    
+    // Подписка на ошибки из ErrorHandler
+    LaunchedEffect(Unit) {
+        ErrorHandler.errorFlow.collect { message ->
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
 
     // Обновлять itemsMap при каждом показе главного экрана
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -77,6 +79,7 @@ fun MainScreenContent() {
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(

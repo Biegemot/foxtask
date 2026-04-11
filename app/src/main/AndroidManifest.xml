@@ -32,7 +32,7 @@
         <!-- AlarmReceiver for exact-time reminders -->
         <receiver
             android:name=".receiver.AlarmReceiver"
-            android:exported="true"
+            android:exported="false"
             android:enabled="true" />
 
         <!-- BootReceiver to reschedule alarms after device reboot -->

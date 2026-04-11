@@ -26,13 +26,14 @@ class AlarmReceiver : BroadcastReceiver() {
     
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == ACTION_REMINDER) {
+            val pendingResult = goAsync() // Продлить жизнь receiver
             val taskId = intent.getIntExtra(EXTRA_TASK_ID, -1)
             val title = intent.getStringExtra(EXTRA_TASK_TITLE) ?: "Напоминание"
             
             if (taskId != -1) {
                 Log.i("AlarmReceiver", "Reminder triggered for task $taskId: $title")
                 
-                // Show notification
+                // Show notification immediately (synchronous)
                 NotificationHelper.showReminder(
                     context = context,
                     taskId = taskId,
@@ -59,12 +60,14 @@ class AlarmReceiver : BroadcastReceiver() {
                         }
                     } catch (e: Exception) {
                         Log.e("AlarmReceiver", "Failed to reschedule reminder", e)
+                    } finally {
+                        pendingResult.finish() // Завершить receiver
                     }
                 }
-             } else {
-                 Log.e("AlarmReceiver", "Invalid task ID in reminder intent")
-             }
-         }
-     }
-}
+            } else {
+                Log.e("AlarmReceiver", "Invalid task ID in reminder intent")
+                pendingResult.finish()
+            }
+        }
+    }
 }

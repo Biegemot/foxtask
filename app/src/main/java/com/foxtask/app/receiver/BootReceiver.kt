@@ -27,11 +27,19 @@ class BootReceiver : BroadcastReceiver() {
     
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
+            val pendingResult = goAsync() // Продлить жизнь receiver
             Log.i(TAG, "Boot completed, rescheduling reminders...")
             
             // Reschedule all reminders in background
-            CoroutineScope(Dispatchers.IO + ServiceLocator.globalExceptionHandler).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 try {
+                    // Инициализировать ServiceLocator, если еще не инициализирован
+                    try {
+                        ServiceLocator.init(context.applicationContext)
+                    } catch (e: Exception) {
+                        Log.d(TAG, "ServiceLocator already initialized")
+                    }
+                    
                     val taskDao = ServiceLocator.getDatabase().taskDao()
                     val tasksWithReminders = taskDao.getAllTasks().filter { 
                         it.reminderEnabled && !it.isHabit 
@@ -53,6 +61,8 @@ class BootReceiver : BroadcastReceiver() {
                     Log.i(TAG, "Rescheduled ${tasksWithReminders.size} reminders after boot")
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to reschedule reminders", e)
+                } finally {
+                    pendingResult.finish() // Завершить receiver
                 }
             }
         }

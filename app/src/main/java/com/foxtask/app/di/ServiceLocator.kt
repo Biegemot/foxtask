@@ -10,6 +10,7 @@ import com.foxtask.app.data.repository.FoxTaskRepository
 import com.foxtask.app.data.repository.impl.FoxTaskRepositoryImpl
 import com.foxtask.app.domain.usecases.*
 import com.foxtask.app.presentation.viewmodel.*
+import com.foxtask.app.util.ErrorHandler
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,9 @@ object ServiceLocator {
         // Initialize global exception handler
         globalExceptionHandler = CoroutineExceptionHandler { _, exception ->
             Log.e("GlobalExceptionHandler", "Unhandled coroutine exception", exception)
-            // TODO: Show user-friendly notification/snackbar
+            CoroutineScope(Dispatchers.Main).launch {
+                ErrorHandler.handleError(exception)
+            }
         }
 
         database = FoxTaskDatabase.getInstance(context)
