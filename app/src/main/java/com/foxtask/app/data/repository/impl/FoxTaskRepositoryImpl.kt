@@ -82,7 +82,7 @@ class FoxTaskRepositoryImpl(
 
     // Outfit
     override suspend fun getOutfit(userId: Int): Outfit? = outfitDao.getOutfit(userId)
-    override fun getOutfitStream(userId: Int): Flow<Outfit> = outfitDao.getOutfitStream(userId)
+    override fun getOutfitStream(userId: Int): Flow<Outfit?> = outfitDao.getOutfitStream(userId)
     override suspend fun insertOutfit(outfit: Outfit) = outfitDao.insertOutfit(outfit)
     override suspend fun updateOutfit(outfit: Outfit) = outfitDao.updateOutfit(outfit)
 
