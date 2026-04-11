@@ -1,8 +1,9 @@
-package com.foxtask.app.data.repository
+package com.foxtask.app.data.repository.impl
 
 import com.foxtask.app.data.local.dao.*
 import com.foxtask.app.data.local.entities.*
 import com.foxtask.app.data.models.*
+import com.foxtask.app.data.repository.FoxTaskRepository
 import com.foxtask.app.domain.models.Statistics
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
