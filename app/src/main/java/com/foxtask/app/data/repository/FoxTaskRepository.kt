@@ -54,7 +54,7 @@ interface FoxTaskRepository {
 
     // Outfit
     suspend fun getOutfit(userId: Int): Outfit?
-    fun getOutfitStream(userId: Int): Flow<Outfit>
+    fun getOutfitStream(userId: Int): Flow<Outfit?>
     suspend fun insertOutfit(outfit: Outfit)
     suspend fun updateOutfit(outfit: Outfit)
 

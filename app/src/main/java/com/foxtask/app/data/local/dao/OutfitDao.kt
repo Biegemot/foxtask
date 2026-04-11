@@ -15,7 +15,7 @@ interface OutfitDao {
     suspend fun getOutfit(userId: Int): Outfit?
 
     @Query("SELECT * FROM outfit WHERE userId = :userId LIMIT 1")
-    fun getOutfitStream(userId: Int): Flow<Outfit>
+    fun getOutfitStream(userId: Int): Flow<Outfit?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOutfit(outfit: Outfit)
